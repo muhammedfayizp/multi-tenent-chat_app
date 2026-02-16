@@ -4,7 +4,7 @@ let socket = null;
 
 export const connectSocket = (token) => {
   if (!socket && token) {
-    socket = io("http://localhost:4000", {
+    socket = io("https://multi-tenent-chat-app.onrender.com", {
       auth: { token },
       withCredentials: true
     });
