@@ -60,7 +60,7 @@ app.use('/member', member_route)
 
 app.use('/groups',chat_route)
 
-server.listen(config.port, () => {
+server.listen(config.port, '0.0.0.0', () => {
     console.log('server is running')
     console.log(`http://localhost:${config.port}`);
 
