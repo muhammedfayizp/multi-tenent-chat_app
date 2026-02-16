@@ -1,4 +1,4 @@
-const GroupModel = require("../models/groupModel");
+const GroupModel = require("../models/GroupModel");
 
 const createGroup = async (data, session = null) => {
     const [group] = await GroupModel.create([data], { session });
