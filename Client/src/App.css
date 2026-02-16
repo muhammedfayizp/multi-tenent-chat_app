@@ -1,0 +1,8 @@
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at 20% 20%, #2a2a2a 0%, transparent 40%),
+    linear-gradient(135deg, #0a0a0a 0%, #121212 40%, #1c1c1c 100%);
+
+  background-attachment: fixed;
+}

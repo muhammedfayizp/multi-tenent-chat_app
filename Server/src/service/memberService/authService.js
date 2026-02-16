@@ -1,0 +1,49 @@
+const bcrypt = require("bcrypt");
+const UserRepo = require("../../repositories/userRepository");
+const { genAccessToken, genRefreshToken, verifyToken } = require("../../utils/token");
+
+const createMemberAuthService = () => {
+
+  const memberLogin = async ({ email, password, name }) => {
+    let member = await UserRepo.findMemberByEmail(email);
+
+    if (!member) {
+      const passwordHash = await bcrypt.hash(password, 10);
+      member = await UserRepo.createMember({
+        name,
+        email,
+        passwordHash,
+        role: "member",
+        orgId: null
+      });
+    } else {
+      const isMatch = await bcrypt.compare(password, member.passwordHash);
+      if (!isMatch) return { success: false, message: "Invalid credentials" };
+    }
+
+    const accessToken = genAccessToken(member._id, member.orgId, member.role);
+    const refreshToken = genRefreshToken(member._id, member.orgId, member.role);
+
+    return {
+      success: true,
+      message: "Member logged in successfully",
+      accessToken,
+      refreshToken,
+      orgId: member.orgId,
+      memberId: member._id,
+      role: member.role
+    };
+  };
+
+  const validateRefreshToken = async (token) => {
+    const decoded = verifyToken(token);
+    const accessToken = genAccessToken(decoded.userId, decoded.orgId, decoded.role);
+    const refreshToken = genRefreshToken(decoded.userId, decoded.orgId, decoded.role);
+
+    return { accessToken, refreshToken, role: decoded.role };
+  };
+
+  return { memberLogin, validateRefreshToken };
+};
+
+module.exports = createMemberAuthService;
