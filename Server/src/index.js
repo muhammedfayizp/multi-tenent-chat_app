@@ -24,7 +24,7 @@ const app = express()
 const server = http.createServer(app)
 
 const io = new Server(server, {
-    cors: { origin: 'https://chatapp-seven-khaki.vercel.app', credentials: true }
+    cors: { origin: 'https://chat-app-one-psi-62.vercel.app', credentials: true }
 })
 
 console.log(io,'io');
@@ -39,7 +39,7 @@ app.use(cookieParser());
 
 
 app.use(cors({
-    origin: 'https://chatapp-seven-khaki.vercel.app',
+    origin: 'https://chat-app-one-psi-62.vercel.app',
     credentials: true
 }))
 
