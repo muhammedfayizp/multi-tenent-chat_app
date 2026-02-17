@@ -96,6 +96,8 @@ import store from '../../redux/store';
 import { loginSuccess, logout } from '../../redux/slice/authSlice';
 
 const API_URL = import.meta.env.VITE_API_BASE_URL;
+console.log(API_URL,'axi');
+
 
 export const PubApiClient = axios.create({
   baseURL: API_URL,

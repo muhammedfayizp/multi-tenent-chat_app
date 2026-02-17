@@ -48,6 +48,7 @@ mongoose
     .then(() => console.log('mongodb connected'))
     .catch((err) => console.log('mongodb erro', err))
 
+    console.log("Mongo URL 👉", config.mongoURL);
 
 
 app.use('/admin/auth', adminAuth_route)
@@ -60,8 +61,10 @@ app.use('/member', member_route)
 
 app.use('/groups',chat_route)
 
-server.listen(config.port, '0.0.0.0', () => {
-    console.log('server is running')
-    console.log(`http://localhost:${config.port}`);
 
-})
+const PORT = process.env.PORT || config.port || 4000;
+
+server.listen(PORT, '0.0.0.0', () => {
+    console.log('Server is running');
+    console.log(`Listening on port ${PORT}`);
+});
