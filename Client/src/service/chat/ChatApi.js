@@ -1,4 +1,4 @@
-import { AxiosInstance, PubApiClient } from "../axiosInstance/AxiosInstance";
+import { AxiosInstance } from "../axiosInstance/AxiosInstance";
 
 
 export const getMessages = async (groupId) => {
