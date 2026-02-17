@@ -48,7 +48,7 @@ mongoose
     .then(() => console.log('mongodb connected'))
     .catch((err) => console.log('mongodb erro', err))
 
-    console.log("Mongo URL 👉", config.mongoURL);
+    console.log("Mongo URL ", config.mongoURL);
 
 
 app.use('/admin/auth', adminAuth_route)
