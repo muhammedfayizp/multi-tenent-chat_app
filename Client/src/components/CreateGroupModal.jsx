@@ -283,9 +283,11 @@ const CreateGroupModal = ({ setShowGroupModal, setGroups }) => {
               placeholder="Enter group name"
               value={formData.name}
               onChange={(e) => handleChange("name", e.target.value)}
-              className={`w-full p-3 rounded-lg bg-gray-800 border ${
-                errors.groupName ? "border-red-500" : "border-gray-600"
-              } text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 outline-none`}
+            //   className={`w-full p-3 rounded-lg bg-gray-800 border ${
+            //     errors.groupName ? "border-red-500" : "border-gray-600"
+            //   } text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 outline-none`}
+                            className={`w-full p-3 rounded-xl bg-white/5 border ${errors.groupName ? 'border-red-400' : 'border-white/10'} text-white placeholder-gray-400 outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition mb-3`}
+
             />
             {errors.groupName && (
               <p className="text-red-400 text-sm mt-1">{errors.groupName}</p>
