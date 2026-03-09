@@ -309,7 +309,7 @@ const CreateGroupModal = ({ setShowGroupModal, setGroups }) => {
             formData.users.map((user, index) => (
               <div
                 key={index}
-                className="p-4 bg-gray-800 border border-gray-700 rounded-xl space-y-2"
+                className="p-4 bg-white/5 border border-gray-700 rounded-xl space-y-2"
               >
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
 
@@ -320,7 +320,7 @@ const CreateGroupModal = ({ setShowGroupModal, setGroups }) => {
                     onChange={(e) =>
                       handleUserChange(index, "name", e.target.value)
                     }
-                    className="p-2 rounded-md bg-gray-900 border border-gray-600 text-white placeholder-gray-400 outline-none"
+                    className="p-2 rounded-md bg-white/10 border border-gray-600 text-white placeholder-gray-400 outline-none"
                   />
 
                   <input
@@ -330,7 +330,7 @@ const CreateGroupModal = ({ setShowGroupModal, setGroups }) => {
                     onChange={(e) =>
                       handleUserChange(index, "email", e.target.value)
                     }
-                    className="p-2 rounded-md bg-gray-900 border border-gray-600 text-white placeholder-gray-400 outline-none"
+                    className="p-2 rounded-md bg-white/10 border border-gray-600 text-white placeholder-gray-400 outline-none"
                   />
 
                   <select
@@ -338,7 +338,7 @@ const CreateGroupModal = ({ setShowGroupModal, setGroups }) => {
                     onChange={(e) =>
                       handleUserChange(index, "role", e.target.value)
                     }
-                    className="p-2 rounded-md bg-gray-900 border border-gray-600 text-white"
+                    className="p-2 rounded-md bg-white/10 border border-gray-600 text-white"
                   >
                     <option value="member">Member</option>
                   </select>
