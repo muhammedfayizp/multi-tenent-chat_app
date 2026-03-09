@@ -249,7 +249,8 @@ const CreateGroupModal = ({ setShowGroupModal, setGroups }) => {
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 px-4">
-      <div className="relative w-full max-w-lg bg-[#111827] border border-gray-700 rounded-2xl p-6 shadow-xl">
+      {/* <div className="relative w-full max-w-lg bg-[#111827] border border-gray-700 rounded-2xl p-6 shadow-xl"> */}
+        <div className="relative w-full max-w-md p-6 rounded-3xl shadow-2xl backdrop-blur-xl bg-gradient-to-br from-white/10 to-white/5 border border-white/20">
 
         {/* Close Button */}
         <button
