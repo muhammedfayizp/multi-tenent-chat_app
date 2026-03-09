@@ -27,7 +27,6 @@ const io = new Server(server, {
     cors: { origin: 'https://chat-app-one-psi-62.vercel.app', credentials: true }
 })
 
-console.log(io,'io');
 
 
 io.use(verifySocket);
@@ -47,8 +46,6 @@ mongoose
     .connect(config.mongoURL)
     .then(() => console.log('mongodb connected'))
     .catch((err) => console.log('mongodb erro', err))
-
-    console.log("Mongo URL ", config.mongoURL);
 
 
 app.use('/admin/auth', adminAuth_route)
