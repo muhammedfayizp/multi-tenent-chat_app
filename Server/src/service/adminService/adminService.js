@@ -2,9 +2,11 @@ const orgRepo = require("../../repositories/orgRepository");
 const userRepo = require("../../repositories/userRepository");
 const groupRepo = require("../../repositories/groupRepository");
 const inviteRepo = require('../../repositories/inviteRepository')
-const transporter = require('../../config/mail')
+// const transporter = require('../../config/mail')
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
+
+const sgMail = require("@sendgrid/mail");
 
 
 const createAdminService = () => {
@@ -105,25 +107,27 @@ const createAdminService = () => {
     //     }
     // };
 
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-    const sendInviteEmail = async (email, link) => {
-        try {
-            console.log('in send',email,link);
-            
-            await transporter.sendMail({
-                to: email,
-                subject: "You are invited to join the Chat App",
-                html: `
-                    <h3>You have been invited</h3>
-                    <p>Click the link below to set your password</p>
-                    <a href="${link}">Set Password</a>
-                `
-            });
-        } catch (error) {
-            console.error("Email sending failed:", error);
-            throw error; 
-        }
-    };
+        const sendInviteEmail = async (email, link) => {
+            try {
+                console.log('in send',email,link);
+                
+                await sgMail.send({
+                    to: email,
+                    from: process.env.NODEMAILER_EMAIL,
+                    subject: "You are invited to join the Chat App",
+                    html: `
+                        <h3>You have been invited</h3>
+                        <p>Click the link below to set your password</p>
+                        <a href="${link}">Set Password</a>
+                    `
+                });
+            } catch (error) {
+                console.error("Email sending failed:", error);
+                throw error; 
+            }
+        };
 
     const groupCreation = async (groupForm, adminUserId, session = null) => {
         try {
