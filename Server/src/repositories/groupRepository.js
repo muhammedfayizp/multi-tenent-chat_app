@@ -25,7 +25,8 @@ const findGroupsByOrgIdandPopulate = async (orgId, session = null) => {
 
 const addMemberToGroup = async (group, userId, session = null) => {
     if (!Array.isArray(group.members)) group.members = [];
-    if (!group.members.includes(userId)) {
+    // if (!group.members.includes(userId)) {
+    if (!group.members.some(id => id.toString() === userId.toString())) {
         group.members.push(userId);
         await group.save({ session });
     }

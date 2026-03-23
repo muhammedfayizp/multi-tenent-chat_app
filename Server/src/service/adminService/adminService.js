@@ -1,10 +1,126 @@
 const orgRepo = require("../../repositories/orgRepository");
 const userRepo = require("../../repositories/userRepository");
 const groupRepo = require("../../repositories/groupRepository");
+const inviteRepo = require('../../repositories/inviteRepository')
+const transporter = require('../../config/mail')
 const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
 
 
 const createAdminService = () => {
+
+    // const groupCreation = async (groupForm, adminUserId, session = null) => {
+    //     try {
+
+    //         if (!groupForm || !groupForm.name) {
+    //             throw new Error("Group name is required");
+    //         }
+
+    //         const { name, users = [] } = groupForm;
+
+
+    //         const adminUser = await userRepo.findUserById(adminUserId, session);
+
+    //         if (!adminUser || adminUser.role !== "admin") {
+    //             throw new Error("Admin not found or unauthorized");
+    //         }
+
+    //         const orgId = adminUser.orgId;
+
+    //         if (!orgId) {
+    //             throw new Error("Admin does not belong to any organization");
+    //         }
+
+    //         const orgExists = await orgRepo.findOrgById(orgId, session);
+
+    //         if (!orgExists) {
+    //             throw new Error("Organization not found");
+    //         }
+
+    //         const existingGroup = await groupRepo.findGroupByName(name.trim(), orgId, session);
+
+    //         if (existingGroup) {
+    //             throw new Error("Group with this name already exists");
+    //         }
+
+    //         // Create -- group    
+    //         const newGroup = await groupRepo.createGroup(
+    //             {
+    //                 name: name.trim(),
+    //                 orgId,
+    //                 createdBy: adminUserId
+    //             },
+    //             session
+    //         );
+
+    //         await userRepo.addGroupToUser(adminUser, newGroup._id, session);
+    //         newGroup.members.push(adminUser._id);
+
+    //         const validUsers = users.filter(u => u?.name && u.name.trim() !== "" && u?.email && u.email.trim() !== "");
+
+
+
+    //         for (const u of validUsers) {
+    //             const name = u.name.trim();
+    //             const email = u.email.trim().toLowerCase();
+
+    //             let user = await userRepo.findUserByEmailAndOrg(email, orgId, session);
+
+    //             const defaultPassword = "defaultPassword123";
+    //             const passwordHash = await bcrypt.hash(defaultPassword, 10);
+
+    //             if (!user) {
+    //                 user = await userRepo.createMember({
+    //                     name,
+    //                     email,
+    //                     role: u.role || "member",
+    //                     orgId,
+    //                     groupIds: [newGroup._id],
+    //                     passwordHash
+    //                 }, session);
+    //             } else {
+    //                 await userRepo.addGroupToUser(user, newGroup._id, session);
+    //             }
+
+    //             newGroup.members.push(user._id);
+    //         }
+
+    //         await newGroup.save();
+
+
+    //         return {
+    //             success: true,
+    //             message: "Group created successfully",
+    //             group: newGroup
+    //         };
+
+    //     } catch (error) {
+
+    //         console.error("Error creating group:", error);
+
+    //         return {
+    //             success: false,
+    //             message: error?.message || "Failed to create group"
+    //         };
+    //     }
+    // };
+
+
+    const sendInviteEmail = async (email, link) => {
+        try {
+            await transporter.sendMail({
+                to: email,
+                subject: "You are invited to join the Chat App",
+                html: `
+                    <h3>You have been invited</h3>
+                    <p>Click the link below to set your password</p>
+                    <a href="${link}">Set Password</a>
+                `
+            });
+        } catch (error) {
+            console.error("Email sending failed:", error);
+        }
+    };
 
     const groupCreation = async (groupForm, adminUserId, session = null) => {
         try {
@@ -63,8 +179,8 @@ const createAdminService = () => {
 
                 let user = await userRepo.findUserByEmailAndOrg(email, orgId, session);
 
-                const defaultPassword = "defaultPassword123";
-                const passwordHash = await bcrypt.hash(defaultPassword, 10);
+                // const defaultPassword = "defaultPassword123";
+                // const passwordHash = await bcrypt.hash(defaultPassword, 10);
 
                 if (!user) {
                     user = await userRepo.createMember({
@@ -73,8 +189,24 @@ const createAdminService = () => {
                         role: u.role || "member",
                         orgId,
                         groupIds: [newGroup._id],
-                        passwordHash
+                        passwordHash: null,
+                        status: "pending",
+                        invitedBy: adminUserId
                     }, session);
+
+                    const inviteToken = crypto.randomBytes(32).toString("hex");
+                    console.log(inviteToken);
+                    
+                    await inviteRepo.createInvite({
+                        email,
+                        orgId,
+                        token: inviteToken
+                    }, session);
+                
+                    const inviteLink = `${process.env.FRONTEND_URL}/set-password/${inviteToken}`;
+                
+                    await sendInviteEmail(email, inviteLink);
+                
                 } else {
                     await userRepo.addGroupToUser(user, newGroup._id, session);
                 }

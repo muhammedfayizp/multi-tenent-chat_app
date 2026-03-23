@@ -4,6 +4,7 @@ import Login from "./pages/Login/Login";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import { ToastContainer } from "react-toastify";
+import SetPassword from "./pages/SetPassword/SetPassword";
 
 const App = () => {
   return (
@@ -24,6 +25,8 @@ const App = () => {
     <Routes>
 
       <Route path="/" element={<Login />} />
+      <Route path="/set-password/:token" element={<SetPassword />} />
+
 
       <Route
         path="/admin/dashboard"

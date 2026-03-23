@@ -1,16 +1,57 @@
+// const mongoose = require("mongoose");
+
+// const userSchema = new mongoose.Schema({
+
+//     orgId: {
+//         type: mongoose.Schema.Types.ObjectId,
+//         ref: "Organization",
+//         required: false
+//     },
+//     name:{
+//         type: String,
+//         required: true,
+//     },
+//     email: {
+//         type: String,
+//         required: true,
+//         unique: true
+//     },
+
+//     passwordHash: {
+//         type: String,
+//         required: true
+//     },
+
+//     role: {
+//         type: String,
+//         enum: ["admin", "member"],
+//         default: "member"
+//     },
+//     groupIds: {
+//         type: [mongoose.Schema.Types.ObjectId], 
+//         ref: "Group",
+//         default: [] 
+//     }
+
+// }, { timestamps: true });
+
+// module.exports = mongoose.model("User", userSchema);
+
+
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
 
     orgId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Organization",
-        required: false
+        ref: "Organization"
     },
-    name:{
+
+    name: {
         type: String,
-        required: true,
+        required: true
     },
+
     email: {
         type: String,
         required: true,
@@ -19,7 +60,7 @@ const userSchema = new mongoose.Schema({
 
     passwordHash: {
         type: String,
-        required: true
+        default: null   // ❗ password will be set later
     },
 
     role: {
@@ -27,10 +68,22 @@ const userSchema = new mongoose.Schema({
         enum: ["admin", "member"],
         default: "member"
     },
+
+    status: {
+        type: String,
+        enum: ["pending", "active"],
+        default: "pending"
+    },
+
+    invitedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    },
+
     groupIds: {
-        type: [mongoose.Schema.Types.ObjectId], 
+        type: [mongoose.Schema.Types.ObjectId],
         ref: "Group",
-        default: [] 
+        default: []
     }
 
 }, { timestamps: true });
