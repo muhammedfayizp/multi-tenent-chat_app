@@ -6,7 +6,7 @@ const inviteRepo = require('../../repositories/inviteRepository')
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 
-const sgMail = require("@sendgrid/mail");
+import { Resend } from "resend";
 
 
 const createAdminService = () => {
@@ -107,15 +107,15 @@ const createAdminService = () => {
     //     }
     // };
 
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    const resend = new Resend(process.env.RESEND_API_KEY);
 
         const sendInviteEmail = async (email, link) => {
             try {
                 console.log('in send',email,link);
                 
-                await sgMail.send({
+                await resend.emails.send({
                     to: email,
-                    from: process.env.NODEMAILER_EMAIL,
+                    from: "onboarding@resend.dev",
                     subject: "You are invited to join the Chat App",
                     html: `
                         <h3>You have been invited</h3>
