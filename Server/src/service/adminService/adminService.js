@@ -2,12 +2,10 @@ const orgRepo = require("../../repositories/orgRepository");
 const userRepo = require("../../repositories/userRepository");
 const groupRepo = require("../../repositories/groupRepository");
 const inviteRepo = require('../../repositories/inviteRepository')
-// const transporter = require('../../config/mail')
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 
-import { Resend } from "resend";
-
+const { Resend } = require("resend");
 
 const createAdminService = () => {
 
