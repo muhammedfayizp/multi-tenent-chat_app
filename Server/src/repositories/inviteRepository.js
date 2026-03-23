@@ -3,6 +3,8 @@ const InviteModel = require('../models/InviteModel')
 
 const createInvite = async (data, session = null) => {
     const { email, orgId, token } = data;
+    console.log(email,orgId,token);
+    
 
     const normalizedEmail = email.trim().toLowerCase();
 

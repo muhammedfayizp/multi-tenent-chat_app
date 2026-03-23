@@ -177,6 +177,9 @@ const createAdminService = () => {
                 const name = u.name.trim();
                 const email = u.email.trim().toLowerCase();
 
+                console.log("name",name,email);
+                
+
                 let user = await userRepo.findUserByEmailAndOrg(email, orgId, session);
 
                 // const defaultPassword = "defaultPassword123";
@@ -194,8 +197,10 @@ const createAdminService = () => {
                         invitedBy: adminUserId
                     }, session);
 
+                    console.log('userserw',user);
+                    
                     const inviteToken = crypto.randomBytes(32).toString("hex");
-                    console.log(inviteToken);
+                    console.log('int T:',inviteToken);
                     
                     await inviteRepo.createInvite({
                         email,
