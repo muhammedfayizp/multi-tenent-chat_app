@@ -108,6 +108,8 @@ const createAdminService = () => {
 
     const sendInviteEmail = async (email, link) => {
         try {
+            console.log('in send',email,link);
+            
             await transporter.sendMail({
                 to: email,
                 subject: "You are invited to join the Chat App",
@@ -119,6 +121,7 @@ const createAdminService = () => {
             });
         } catch (error) {
             console.error("Email sending failed:", error);
+            throw error; 
         }
     };
 
@@ -209,7 +212,8 @@ const createAdminService = () => {
                     }, session);
                 
                     const inviteLink = `${process.env.FRONTEND_URL}/set-password/${inviteToken}`;
-                
+                    console.log('int link',inviteLink);
+                    
                     await sendInviteEmail(email, inviteLink);
                 
                 } else {
