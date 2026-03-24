@@ -33,11 +33,11 @@ const SetPassword = () => {
   };
 
   return (
-    <div className="h-screen flex items-center justify-center bg-gray-900">
+    <div className="w-full min-h-screen  flex items-center justify-center px-4">
       <form
         onSubmit={handleSubmit}
-        className="bg-gray-800 p-6 rounded-xl w-full max-w-sm space-y-4"
-      >
+        className="w-full max-w-md backdrop-blur-xl bg-white/10 border border-white/20 shadow-2xl rounded-3xl p-8"
+        >
         <h2 className="text-white text-lg font-semibold">
           Set Your Password
         </h2>
