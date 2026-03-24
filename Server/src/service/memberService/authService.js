@@ -1,12 +1,16 @@
 const bcrypt = require("bcrypt");
 const UserRepo = require("../../repositories/userRepository");
+const inviteRepo = require('../../repositories/inviteRepository')
 const { genAccessToken, genRefreshToken, verifyToken } = require("../../utils/token");
+
 
 const createMemberAuthService = () => {
 
   const getInviteDetails = async (token) => {
     try {
       const invite = await inviteRepo.findByToken(token);
+      console.log('in',invite);
+      
   
       if (!invite) {
         throw new Error("Invalid or expired token");
@@ -21,6 +25,7 @@ const createMemberAuthService = () => {
         invite.email,
         invite.orgId
       );
+  console.log('uU',user);
   
       if (!user) {
         throw new Error("User not found");
