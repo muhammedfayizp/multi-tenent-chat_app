@@ -22,6 +22,8 @@ const SetPassword = () => {
     const fetchInviteDetails = async () => {
       try {
         const response = await fetchInfo(token)
+        console.log('res',response.data);
+        
         setUserInfo(response.data);
       } catch (err) {
         setError("Invalid or expired link");
