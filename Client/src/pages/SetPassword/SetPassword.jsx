@@ -6,6 +6,8 @@ const SetPassword = () => {
   const { token } = useParams();
   const navigate = useNavigate();
 
+  const [showPassword, setShowPassword] = useState(false);
+
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
