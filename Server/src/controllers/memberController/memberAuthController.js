@@ -5,8 +5,12 @@ const createMemberAuthController = (memberAuthService) => {
   const fetchInviteDetails = async (req, res) => {
     try {
       const { token } = req.params;
+      console.log('tok',token);
+      
   
       const response = await memberAuthService.getInviteDetails(token);
+      console.log('resp',response);
+      
   
       res.status(200).json({
         success: true,
