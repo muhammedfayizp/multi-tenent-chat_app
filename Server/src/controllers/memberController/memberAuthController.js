@@ -14,7 +14,7 @@ const createMemberAuthController = (memberAuthService) => {
   
       res.status(200).json({
         success: true,
-        response
+        data:response
       });
   
     } catch (error) {
