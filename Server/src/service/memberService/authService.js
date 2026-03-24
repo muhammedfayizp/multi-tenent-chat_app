@@ -17,7 +17,7 @@ const createMemberAuthService = () => {
         throw new Error("Invite expired");
       }
   
-      const user = await userRepo.findUserByEmailAndOrg(
+      const user = await UserRepo.findUserByEmailAndOrg(
         invite.email,
         invite.orgId
       );
