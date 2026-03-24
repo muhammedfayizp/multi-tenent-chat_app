@@ -35,27 +35,19 @@ const createInvite = async (data, session = null) => {
     return newInvite;
 };
 
-// Find invite by token
-// const findInviteByToken = async (token, session = null) => {
-//     return InviteModel.findOne({ token }).session(session);
-// };
+const findByToken = async (token, session = null) => {
+    return InviteModel.findOne({ token }).session(session);
+  };
 
 // // Delete invite
 // const deleteInviteByToken = async (token, session = null) => {
 //     return InviteModel.deleteOne({ token }).session(session);
 // };
 
-// Optional: find invite by email + org
-// const findInviteByEmailAndOrg = async (email, orgId, session = null) => {
-//     return InviteModel.findOne({
-//         email: email.trim().toLowerCase(),
-//         orgId
-//     }).session(session);
-// };
+
 
 module.exports = {
     createInvite,
-    // findInviteByToken,
+    findByToken,
     // deleteInviteByToken,
-    // findInviteByEmailAndOrg
 };

@@ -4,6 +4,38 @@ const { genAccessToken, genRefreshToken, verifyToken } = require("../../utils/to
 
 const createMemberAuthService = () => {
 
+  const getInviteDetails = async (token) => {
+    try {
+      const invite = await inviteRepo.findByToken(token);
+  
+      if (!invite) {
+        throw new Error("Invalid or expired token");
+      }
+  
+      // optional expiry check
+      if (invite.expiresAt < new Date()) {
+        throw new Error("Invite expired");
+      }
+  
+      const user = await userRepo.findUserByEmailAndOrg(
+        invite.email,
+        invite.orgId
+      );
+  
+      if (!user) {
+        throw new Error("User not found");
+      }
+  
+      return {
+        name: user.name,
+        email: user.email
+      };
+  
+    } catch (error) {
+      throw error;
+    }
+  };
+
   const memberLogin = async ({ email, password, name }) => {
     let member = await UserRepo.findMemberByEmail(email);
 
@@ -43,7 +75,7 @@ const createMemberAuthService = () => {
     return { accessToken, refreshToken, role: decoded.role };
   };
 
-  return { memberLogin, validateRefreshToken };
+  return { getInviteDetails,memberLogin, validateRefreshToken };
 };
 
 module.exports = createMemberAuthService;

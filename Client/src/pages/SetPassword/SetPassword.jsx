@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { fetchInfo } from "../../service/user/UserApi";
 
 const SetPassword = () => {
   const { token } = useParams();
@@ -15,11 +16,24 @@ const SetPassword = () => {
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
+
+  useEffect(() => {
+    const fetchInviteDetails = async () => {
+      try {
+        const response = await fetchInfo(token)
+        setUserInfo(response.data);
+      } catch (err) {
+        setError("Invalid or expired link");
+      }
+    };
+  
+    fetchInviteDetails();
+  }, [token]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // ✅ Validation
     if (!password || !confirmPassword) {
       return setError("All fields are required");
     }
@@ -59,8 +73,14 @@ const SetPassword = () => {
         onSubmit={handleSubmit}
         className="w-full max-w-md backdrop-blur-xl bg-white/10 border border-white/20 shadow-2xl rounded-3xl p-8"
       >
+        {userInfo && (
+          <div className="mb-6 text-center">
+            <p className="text-gray-300 text-sm">Invited as</p>
+            <p className="text-white font-semibold">{userInfo.name}</p>
+            <p className="text-gray-400 text-sm">{userInfo.email}</p>
+          </div>
+        )}
 
-        {/* Header */}
         <h2 className="text-3xl font-bold text-white text-center mb-2">
           Set Your Password
         </h2>
@@ -68,12 +88,10 @@ const SetPassword = () => {
           Create a secure password to continue
         </p>
 
-        {/* Error */}
         {error && (
           <p className="text-red-300 text-sm mb-4 text-center">{error}</p>
         )}
 
-        {/* Password */}
         <div className="relative mb-4">
           <input
             type={showPassword ? "text" : "password"}
