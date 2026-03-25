@@ -24,6 +24,26 @@ const createMemberAuthController = (memberAuthService) => {
       });
     }
   };
+
+  const handlePassword = async (req, res) => {
+    try {
+      const { token, password } = req.body;
+  
+      const response = await memberAuthService.setPassword(token, password);
+  
+      res.status(200).json({
+        success: true,
+        message: "Password set successfully",
+        data: response
+      });
+  
+    } catch (error) {
+      res.status(400).json({
+        success: false,
+        message: error.message
+      });
+    }
+  };
   const memberSignUp = async (req, res) => {
     try {
       const memberData = req.body;
@@ -79,7 +99,7 @@ const createMemberAuthController = (memberAuthService) => {
     }
   };
 
-  return { fetchInviteDetails, memberSignUp, validateRefToken };
+  return { fetchInviteDetails, handlePassword, memberSignUp, validateRefToken };
 };
 
 module.exports = createMemberAuthController;

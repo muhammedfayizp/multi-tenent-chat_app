@@ -13,7 +13,7 @@ const findAdminByEmail = async (email, session = null) => {
 const findMemberByEmail = async (email, session = null) => {
 
     return User.findOne({ email, role: "member" })
-    .session(session);
+        .session(session);
 };
 
 
@@ -42,36 +42,35 @@ const createMember = async (userData, session = null) => {
 const addGroupToUser = async (user, groupId, session = null) => {
 
     if (!user.groupIds.includes(groupId)) {
-      user.groupIds.push(groupId);
-      return user.save({ session });
+        user.groupIds.push(groupId);
+        return user.save({ session });
     }
     return user;
 
-  };
-  
+};
 
-  const findUserByEmail = async (email, session = null) => {
+
+const findUserByEmail = async (email, session = null) => {
     return User.findOne({ email }).session(session);
-  };
+};
 
 
-  const findUsersByIds = async (userIds, session = null) => {
+const findUsersByIds = async (userIds, session = null) => {
     if (!userIds || userIds.length === 0) return []
-    
-    return await User.find({ _id: { $in: userIds } })
-      .select("_id name email role")
-      .session(session)
-  };
+
+    return await User.find({ _id: { $in: userIds }, status: 'active' })
+        .select("_id name email role")
+        .session(session)
+};
 
 
-  const removeGroupFromUsers = async (groupId, session = null) => {
+const removeGroupFromUsers = async (groupId, session = null) => {
 
     const query = UserModel.updateMany(
         { groups: groupId },
         { $pull: { groups: groupId } }
     );
-    console.log(groupId,query,'evfu');
-    
+
 
     if (session) query.session(session)
 
@@ -79,18 +78,16 @@ const addGroupToUser = async (user, groupId, session = null) => {
 };
 const removeGroupFromSingleUser = async (userId, groupId, session = null) => {
 
-  const query = UserModel.findByIdAndUpdate(
-      userId,
-      { $pull: { groups: groupId } },
-      { new: true }
-  );
+    const query = UserModel.findByIdAndUpdate(
+        userId,
+        { $pull: { groups: groupId } },
+        { new: true }
+    );
 
-  console.log(userId, groupId,query,'rscsn');
-  
 
-  if (session) query.session(session);
+    if (session) query.session(session);
 
-  return query;
+    return query;
 };
 
 module.exports = {

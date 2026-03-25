@@ -9,14 +9,12 @@ const createMemberAuthService = () => {
   const getInviteDetails = async (token) => {
     try {
       const invite = await inviteRepo.findByToken(token);
-      console.log('in',invite);
       
   
       if (!invite) {
         throw new Error("Invalid or expired token");
       }
   
-      // optional expiry check
       if (invite.expiresAt < new Date()) {
         throw new Error("Invite expired");
       }
@@ -25,7 +23,6 @@ const createMemberAuthService = () => {
         invite.email,
         invite.orgId
       );
-  console.log('uU',user);
   
       if (!user) {
         throw new Error("User not found");
@@ -35,6 +32,36 @@ const createMemberAuthService = () => {
         name: user.name,
         email: user.email
       };
+  
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const setPassword = async (token, password) => {
+    try {
+      const invite = await inviteRepo.findByToken(token);
+  
+      if (!invite) {
+        throw new Error("Invalid or expired token");
+      }
+  
+      const user = await UserRepo.findUserByEmailAndOrg(
+        invite.email,
+        invite.orgId
+      );
+  
+      if (!user) {
+        throw new Error("User not found");
+      }
+  
+      const passwordHash = await bcrypt.hash(password, 10);
+  
+      user.password = passwordHash;
+      user.status = 'active';
+  
+      await user.save(); 
+  
   
     } catch (error) {
       throw error;

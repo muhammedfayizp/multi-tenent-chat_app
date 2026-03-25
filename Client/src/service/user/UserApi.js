@@ -8,6 +8,11 @@ export const fetchInfo=async(token)=>{
     return response.data
 }
 
+export const submitPassword = async (token,password)=>{
+    const response = await publicApi.post('/member/auth/handlePassword',{token,password})
+    return response.data
+}
+
 export const UserLogin = async(formData)=>{
     const response = await publicApi.post('/member/auth/login',formData)
     return response.data

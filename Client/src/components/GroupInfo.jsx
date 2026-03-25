@@ -168,7 +168,7 @@ const GroupInfo = ({
                 </div>
 
                 {/* AddMembers */}
-                <div className="space-y-3">
+                {/* <div className="space-y-3">
                     <div className="flex justify-between items-center">
                         <h3 className="text-[#8696a0] font-semibold text-sm tracking-wide">Members</h3>
                         {isAdmin && (
@@ -192,7 +192,6 @@ const GroupInfo = ({
                         )}
                     </div>
 
-                    {/* Add Member Input */}
                     {showAddInput && (
                         <div className="flex gap-2 mb-2 flex-col md:flex-row">
                             <input
@@ -238,7 +237,6 @@ const GroupInfo = ({
                     )}
 
 
-                    {/* Members List */}
                     <ul className="space-y-2">
                         {members.map((member, index) => (
                             <li key={member._id || member.email || index} className="flex flex-col md:flex-row items-center justify-between gap-2 px-3 py-2 bg-[#1c1c1c]/70 hover:bg-[#2a2a2a]/80 rounded-xl transition">
@@ -267,7 +265,138 @@ const GroupInfo = ({
                             </li>
                         ))}
                     </ul>
-                </div>
+                </div> */}
+
+<div className="space-y-5">
+  {/* Header */}
+  <div className="flex items-center justify-between">
+    <h3 className="text-[#aebac1] font-semibold text-sm tracking-wide">
+      Members ({members.length})
+    </h3>
+
+    {isAdmin && (
+      <div className="flex items-center gap-3">
+        {!showAddInput && (
+          <button
+            onClick={() => setShowAddInput(true)}
+            className="text-[#00a884] text-sm font-medium hover:text-[#00d69f] transition"
+          >
+            + Add
+          </button>
+        )}
+
+        <button
+          onClick={() => {
+            navigator.clipboard.writeText(
+              `${window.location.origin}/join/${group._id}`
+            );
+            toast.success("Invite link copied!");
+          }}
+          className="text-blue-400 text-sm font-medium hover:text-blue-500 transition"
+        >
+          Invite
+        </button>
+      </div>
+    )}
+  </div>
+
+  {/* Add Member Card */}
+  {showAddInput && (
+    <div className="bg-[#1c1c1c]/80 border border-gray-700 rounded-xl p-4 space-y-3 shadow-md">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <input
+          type="text"
+          placeholder="Enter name"
+          value={newMemberName}
+          onChange={(e) => setNewMemberName(e.target.value)}
+          className="w-full p-2.5 rounded-lg bg-[#111]/80 text-white text-sm placeholder-gray-400 outline-none focus:ring-2 focus:ring-[#00a884]"
+        />
+
+        <input
+          type="email"
+          placeholder="Enter email"
+          value={newMemberEmail}
+          onChange={(e) => setNewMemberEmail(e.target.value)}
+          className="w-full p-2.5 rounded-lg bg-[#111]/80 text-white text-sm placeholder-gray-400 outline-none focus:ring-2 focus:ring-[#00a884]"
+        />
+      </div>
+
+      <div className="flex flex-col sm:flex-row gap-3 items-center justify-between">
+        <select
+          value={newMemberRole}
+          onChange={(e) => setNewMemberRole(e.target.value)}
+          className="w-full sm:w-auto p-2 rounded-lg bg-[#111]/80 text-white text-sm"
+        >
+          <option value="member">Member</option>
+        </select>
+
+        <div className="flex gap-2 w-full sm:w-auto">
+          <button
+            onClick={handleAddMember}
+            disabled={loading}
+            className="flex-1 sm:flex-none bg-[#00a884] px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#00d69f] transition disabled:opacity-50"
+          >
+            {loading ? "Adding..." : "Add Member"}
+          </button>
+
+          <button
+            onClick={() => setShowAddInput(false)}
+            className="px-3 py-2 text-sm text-gray-400 hover:text-white transition"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  )}
+
+  {/* Members List */}
+  <ul className="space-y-2">
+    {members.map((member, index) => (
+      <li
+        key={member._id || member.email || index}
+        className="flex items-center justify-between p-3 bg-[#1c1c1c]/70 hover:bg-[#2a2a2a]/80 rounded-xl transition group"
+      >
+        {/* Left */}
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-11 h-11 shrink-0 bg-gradient-to-tr from-purple-500 to-indigo-500 rounded-full flex items-center justify-center shadow">
+            <FaUser className="text-white text-sm" />
+          </div>
+
+          <div className="flex flex-col truncate">
+            <span className="text-white text-sm font-medium truncate">
+              {member.name}
+            </span>
+
+            <span className="text-xs text-gray-400 truncate">
+              {member.email}
+            </span>
+
+            {member.role === "admin" && (
+              <span className="text-[10px] mt-1 w-fit text-[#00a884] font-medium px-2 py-0.5 rounded bg-[#00a884]/10">
+                Admin
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Right */}
+        {loggedRole === "admin" &&
+          member.role !== "admin" &&
+          member._id !== userId && (
+            <button
+              onClick={() =>
+                handleRemoveMember(group._id, member._id)
+              }
+              className="text-red-500 text-xs font-semibold opacity-0 group-hover:opacity-100 transition"
+            >
+              Remove
+            </button>
+          )}
+      </li>
+    ))}
+  </ul>
+</div>
 
                 <div className="mt-6 border-t border-gray-800 pt-4">
                     <button

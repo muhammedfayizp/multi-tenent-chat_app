@@ -22,7 +22,6 @@ const SetPassword = () => {
     const fetchInviteDetails = async () => {
       try {
         const response = await fetchInfo(token)
-        console.log('res',response.data);
         
         setUserInfo(response.data);
       } catch (err) {
@@ -52,10 +51,11 @@ const SetPassword = () => {
       setLoading(true);
       setError("");
 
-      const res = await axios.post("/api/auth/set-password", {
-        token,
-        password,
-      });
+      // const res = await axios.post("/api/auth/set-password", {
+      //   token,
+      //   password,
+      // });
+      const response = await submitPassword(token,password)
 
       if (res.data.success) {
         alert("Password set successfully!");
@@ -75,13 +75,7 @@ const SetPassword = () => {
         onSubmit={handleSubmit}
         className="w-full max-w-md backdrop-blur-xl bg-white/10 border border-white/20 shadow-2xl rounded-3xl p-8"
       >
-        {userInfo && (
-          <div className="mb-6 text-center">
-            <p className="text-gray-300 text-sm">Invited as</p>
-            <p className="text-white font-semibold">{userInfo.name}</p>
-            <p className="text-gray-400 text-sm">{userInfo.email}</p>
-          </div>
-        )}
+        
 
         <h2 className="text-3xl font-bold text-white text-center mb-2">
           Set Your Password
@@ -89,6 +83,19 @@ const SetPassword = () => {
         <p className="text-gray-200 text-center mb-6 text-sm">
           Create a secure password to continue
         </p>
+
+        {userInfo ? (
+        <div className="mb-6 text-center bg-white/5 p-4 rounded-xl border border-white/10">
+          <p className="text-gray-300 text-sm">Invited as</p>
+          <p className="text-white font-semibold">{userInfo.name}</p>
+          <p className="text-gray-400 text-sm">{userInfo.email}</p>
+        </div>
+      ) : (
+        <p className="text-gray-400 text-sm text-center mb-6">
+          Loading user info...
+        </p>
+      )}
+
 
         {error && (
           <p className="text-red-300 text-sm mb-4 text-center">{error}</p>
