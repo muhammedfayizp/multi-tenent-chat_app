@@ -41,7 +41,7 @@ const Sidebar = ({
 
 //         <div className="relative flex gap-3">
 //           {isLoggedIn && (
-//             <div className="relative">
+//             <div className="relatve">
 //               <div
 //                 onClick={() => setShowProfileMenu(prev => !prev)}
 //                 className="w-9 h-9 rounded-full bg-gray-700 flex items-center justify-center cursor-pointer"
@@ -147,7 +147,7 @@ return (
     `}
   >
     {/* Header */}
-    <div className="flex items-center justify-between p-4 text-lg sm:text-xl text-white font-bold border-b border-gray-700 sticky top-0 bg-gray-900 z-10">
+    <div className="flex items-center justify-between p-4 text-lg sm:text-xl text-white font-bold border-b  sticky top-0  z-10">
       
       <div className="flex items-center gap-2">
         <FaComments /> <span className="hidden sm:block">Groups</span>
@@ -194,7 +194,7 @@ return (
             {showMenu && (
               <div
                 ref={menuRef}
-                className="absolute right-0 mt-2 w-44 bg-gray-800 rounded-lg shadow-xl z-10 border border-gray-700"
+                className="absolute right-0 mt-5 w-44 bg-gray-800 rounded-lg shadow-xl z-10 border border-gray-700"
               >
                 <button
                   onClick={() => {
