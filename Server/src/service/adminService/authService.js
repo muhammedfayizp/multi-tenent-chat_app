@@ -21,7 +21,9 @@ const createAdminAuthService = () => {
                 email,
                 passwordHash,
                 role: "admin",
-                orgId: organization._id
+                orgId: organization._id,
+                status: "active",
+
             });
 
             console.log("New admin and organization created!");

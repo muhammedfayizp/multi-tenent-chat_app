@@ -116,7 +116,7 @@ const Sidebar = ({
           </div>)
 })
       ) : (
-        <div className="flex flex-col items-center justify-center h-full text-gray-400 gap-3">
+        <div className="flex flex-col items-center justify-center  text-gray-400 gap-3">
           {role === "admin" ? (
             <>
               <p className="text-center">You don't have any existing groups</p>
