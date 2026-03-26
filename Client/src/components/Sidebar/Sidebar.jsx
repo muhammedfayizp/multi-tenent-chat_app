@@ -30,111 +30,241 @@ const Sidebar = ({
     navigate("/");
   };
 
-  return (
-    <div className={`${showSidebar ? "block" : "hidden"} md:block w-full md:w-1/3 lg:w-1/4 border-r shadow-sm`}>
+//   return (
+//     <div className={`${showSidebar ? "block" : "hidden"} md:block w-full md:w-1/3 lg:w-1/4 border-r shadow-sm`}>
 
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 text-xl text-white font-bold">
-        <div className="flex items-center gap-2">
-          <FaComments /> Groups
-        </div>
+//       {/* Header */}
+//       <div className="flex items-center justify-between p-4 text-xl text-white font-bold">
+//         <div className="flex items-center gap-2">
+//           <FaComments /> Groups
+//         </div>
 
-        <div className="relative flex gap-3">
-          {isLoggedIn && (
-            <div className="relative">
-              <div
-                onClick={() => setShowProfileMenu(prev => !prev)}
-                className="w-9 h-9 rounded-full bg-gray-700 flex items-center justify-center cursor-pointer"
-              >
-                <span className="text-sm font-semibold text-white">{email?.charAt(0).toUpperCase()}</span>
-              </div>
+//         <div className="relative flex gap-3">
+//           {isLoggedIn && (
+//             <div className="relative">
+//               <div
+//                 onClick={() => setShowProfileMenu(prev => !prev)}
+//                 className="w-9 h-9 rounded-full bg-gray-700 flex items-center justify-center cursor-pointer"
+//               >
+//                 <span className="text-sm font-semibold text-white">{email?.charAt(0).toUpperCase()}</span>
+//               </div>
 
-              {showProfileMenu && (
-                <div className="absolute right-0 mt-2 w-40 bg-gray-800 rounded-lg shadow-lg border border-gray-700 z-20">
-                  <button
-                    onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-gray-700 transition"
-                  >
-                    Logout
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
+//               {showProfileMenu && (
+//                 <div className="absolute right-0 mt-2 w-40 bg-gray-800 rounded-lg shadow-lg border border-gray-700 z-20">
+//                   <button
+//                     onClick={handleLogout}
+//                     className="w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-gray-700 transition"
+//                   >
+//                     Logout
+//                   </button>
+//                 </div>
+//               )}
+//             </div>
+//           )}
 
-          {role?.toLowerCase() === "admin" && (
-            <>
-              <button
-                ref={buttonRef}
-                onClick={() => setShowMenu(prev => !prev)}
-                className="p-2 rounded-full hover:bg-gray-700 transition"
-              >
-                <FilePen size={20} />
-              </button>
+//           {role?.toLowerCase() === "admin" && (
+//             <>
+//               <button
+//                 ref={buttonRef}
+//                 onClick={() => setShowMenu(prev => !prev)}
+//                 className="p-2 rounded-full hover:bg-gray-700 transition"
+//               >
+//                 <FilePen size={20} />
+//               </button>
 
-              {showMenu && (
-                <div ref={menuRef} className="absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-2xl z-10 border border-gray-700">
-                  <button
-                    onClick={() => {
-                      setShowGroupModal(true);
-                      setShowMenu(false);
-                    }}
-                    className="flex items-center gap-2 w-full px-4 py-3 text-sm text-gray-200 hover:bg-gray-700 transition"
-                  >
-                    <Users size={16} className="text-blue-500" /> Create New Group
-                  </button>
-                </div>
-              )}
-            </>
-          )}
-        </div>
+//               {showMenu && (
+//                 <div ref={menuRef} className="absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-2xl z-10 border border-gray-700">
+//                   <button
+//                     onClick={() => {
+//                       setShowGroupModal(true);
+//                       setShowMenu(false);
+//                     }}
+//                     className="flex items-center gap-2 w-full px-4 py-3 text-sm text-gray-200 hover:bg-gray-700 transition"
+//                   >
+//                     <Users size={16} className="text-blue-500" /> Create New Group
+//                   </button>
+//                 </div>
+//               )}
+//             </>
+//           )}
+//         </div>
+//       </div>
+
+//       {/* Groups List */}
+//       {groups.length > 0 ? (
+//         groups.map(group => {
+//             console.log("Rendering group:", group.name);
+
+//             return (
+                
+//           <div
+//             key={group._id}
+//             // onClick={() => setActiveChat(group)}
+//             onClick={() => {
+//               setActiveChat(group);
+//               setShowSidebar(false); 
+//             }}
+//             className={`flex items-center gap-3 p-4 border-b cursor-pointer hover:bg-gray-800 transition ${activeChat?._id === group._id ? "bg-gray-700" : ""}`}
+//           >
+//             <div className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-600 text-white">
+//               <FaUser size={18} />
+//             </div>
+//             <div className="flex-1">
+//               <div className="font-semibold text-white">{group.name}</div>
+//               <div className="text-sm text-gray-400 truncate">{group.lastMessage || "No messages yet"}</div>
+//             </div>
+//           </div>)
+// })
+//       ) : (
+//         <div className="flex flex-col items-center justify-center  text-gray-400 gap-3">
+//           {role === "admin" ? (
+//             <>
+//               <p className="text-center">You don't have any existing groups</p>
+//               <div
+//                 className="flex items-center gap-2 text-blue-400 cursor-pointer hover:text-blue-300"
+//                 onClick={() => setShowGroupModal(true)}
+//               >
+//                 <FilePen size={20} />
+//                 <span>Create a new group</span>
+//               </div>
+//             </>
+//           ) : (
+//             <p className="text-center">No groups yet. You will see groups when admin adds you.</p>
+//           )}
+//         </div>
+//       )}
+//     </div>
+//   );
+
+return (
+  <div
+    className={`
+      fixed md:static top-0 left-0 h-full z-40
+      w-[85%] sm:w-[70%] md:w-1/3 lg:w-1/4
+      bg-gray-900 border-r border-gray-700 shadow-lg
+      transform transition-transform duration-300
+      ${showSidebar ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+      flex flex-col
+    `}
+  >
+    {/* Header */}
+    <div className="flex items-center justify-between p-4 text-lg sm:text-xl text-white font-bold border-b border-gray-700 sticky top-0 bg-gray-900 z-10">
+      
+      <div className="flex items-center gap-2">
+        <FaComments /> <span className="hidden sm:block">Groups</span>
       </div>
 
-      {/* Groups List */}
-      {groups.length > 0 ? (
-        groups.map(group => {
-            console.log("Rendering group:", group.name);
+      <div className="relative flex gap-2 sm:gap-3">
+        
+        {/* Profile */}
+        {isLoggedIn && (
+          <div className="relative">
+            <div
+              onClick={() => setShowProfileMenu(prev => !prev)}
+              className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gray-700 flex items-center justify-center cursor-pointer"
+            >
+              <span className="text-xs sm:text-sm font-semibold text-white">
+                {email?.charAt(0).toUpperCase()}
+              </span>
+            </div>
 
-            return (
-                
+            {showProfileMenu && (
+              <div className="absolute right-0 mt-2 w-36 sm:w-40 bg-gray-800 rounded-lg shadow-lg border border-gray-700 z-20">
+                <button
+                  onClick={handleLogout}
+                  className="w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-gray-700 transition"
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Admin menu */}
+        {role?.toLowerCase() === "admin" && (
+          <>
+            <button
+              ref={buttonRef}
+              onClick={() => setShowMenu(prev => !prev)}
+              className="p-2 rounded-full hover:bg-gray-700 transition"
+            >
+              <FilePen size={18} />
+            </button>
+
+            {showMenu && (
+              <div
+                ref={menuRef}
+                className="absolute right-0 mt-2 w-44 bg-gray-800 rounded-lg shadow-xl z-10 border border-gray-700"
+              >
+                <button
+                  onClick={() => {
+                    setShowGroupModal(true);
+                    setShowMenu(false);
+                  }}
+                  className="flex items-center gap-2 w-full px-4 py-3 text-sm text-gray-200 hover:bg-gray-700 transition"
+                >
+                  <Users size={16} className="text-blue-500" />
+                  Create New Group
+                </button>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </div>
+
+    {/* Groups List */}
+    <div className="flex-1 overflow-y-auto">
+      {groups.length > 0 ? (
+        groups.map(group => (
           <div
             key={group._id}
-            // onClick={() => setActiveChat(group)}
             onClick={() => {
               setActiveChat(group);
-              setShowSidebar(false); 
+              setShowSidebar(false); // auto close on mobile
             }}
-            className={`flex items-center gap-3 p-4 border-b cursor-pointer hover:bg-gray-800 transition ${activeChat?._id === group._id ? "bg-gray-700" : ""}`}
+            className={`
+              flex items-center gap-3 p-3 sm:p-4 border-b border-gray-700
+              cursor-pointer hover:bg-gray-800 transition
+              ${activeChat?._id === group._id ? "bg-gray-700" : ""}
+            `}
           >
-            <div className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-600 text-white">
-              <FaUser size={18} />
+            <div className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-gray-600 text-white">
+              <FaUser size={16} />
             </div>
-            <div className="flex-1">
-              <div className="font-semibold text-white">{group.name}</div>
-              <div className="text-sm text-gray-400 truncate">{group.lastMessage || "No messages yet"}</div>
+
+            <div className="flex-1 min-w-0">
+              <div className="font-semibold text-white truncate">
+                {group.name}
+              </div>
+              <div className="text-xs sm:text-sm text-gray-400 truncate">
+                {group.lastMessage || "No messages yet"}
+              </div>
             </div>
-          </div>)
-})
+          </div>
+        ))
       ) : (
-        <div className="flex flex-col items-center justify-center  text-gray-400 gap-3">
+        <div className="flex flex-col items-center justify-center h-full text-gray-400 gap-3 px-4 text-center">
           {role === "admin" ? (
             <>
-              <p className="text-center">You don't have any existing groups</p>
+              <p>You don't have any existing groups</p>
               <div
                 className="flex items-center gap-2 text-blue-400 cursor-pointer hover:text-blue-300"
                 onClick={() => setShowGroupModal(true)}
               >
-                <FilePen size={20} />
+                <FilePen size={18} />
                 <span>Create a new group</span>
               </div>
             </>
           ) : (
-            <p className="text-center">No groups yet. You will see groups when admin adds you.</p>
+            <p>No groups yet. You will see groups when admin adds you.</p>
           )}
         </div>
       )}
     </div>
-  );
+  </div>
+);
 };
 
 export default Sidebar;
