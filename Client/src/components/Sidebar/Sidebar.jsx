@@ -147,7 +147,7 @@ return (
     `}
   >
     {/* Header */}
-    <div className="flex items-center justify-between p-4 text-lg sm:text-xl text-white font-bold   sticky top-0  z-10">
+    <div className="flex items-center justify-between p-4 text-lg sm:text-xl text-white font-bold border-b border-gray-800 sticky top-0  z-10">
       
       <div className="flex items-center gap-2">
         <FaComments /> <span className="hidden sm:block">Groups</span>
