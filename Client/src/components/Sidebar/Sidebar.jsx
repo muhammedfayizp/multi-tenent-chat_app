@@ -141,7 +141,6 @@ return (
     className={`
       fixed md:static top-0 left-0 h-full z-40
       w-[85%] sm:w-[70%] md:w-1/3 lg:w-1/4
-      bg-gray-900 border-r border-gray-700 shadow-lg
       transform transition-transform duration-300
       ${showSidebar ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
       flex flex-col
