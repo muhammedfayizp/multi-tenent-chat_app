@@ -106,28 +106,28 @@ const createAdminService = () => {
     // };
 
 
-    
+
     const resend = new Resend(process.env.RESEND_API_KEY);
 
-        const sendInviteEmail = async (email, link) => {
-            try {
-                console.log('in send',email,link);
-                
-                await resend.emails.send({
-                    to: email,
-                    from: "onboarding@resend.dev",
-                    subject: "You are invited to join the Chat App",
-                    html: `
+    const sendInviteEmail = async (email, link) => {
+        try {
+            console.log('in send', email, link);
+
+            await resend.emails.send({
+                to: email,
+                from: "onboarding@resend.dev",
+                subject: "You are invited to join the Chat App",
+                html: `
                         <h3>You have been invited</h3>
                         <p>Click the link below to set your password</p>
                         <a href="${link}">Set Password</a>
                     `
-                });
-            } catch (error) {
-                console.error("Email sending failed:", error);
-                throw error; 
-            }
-        };
+            });
+        } catch (error) {
+            console.error("Email sending failed:", error);
+            throw error;
+        }
+    };
 
     const groupCreation = async (groupForm, adminUserId, session = null) => {
         try {
@@ -184,13 +184,12 @@ const createAdminService = () => {
                 const name = u.name.trim();
                 const email = u.email.trim().toLowerCase();
 
-                console.log("name",name,email);
-                
+                console.log("name", name, email);
+
 
                 let user = await userRepo.findUserByEmailAndOrg(email, orgId, session);
 
-                // const defaultPassword = "defaultPassword123";
-                // const passwordHash = await bcrypt.hash(defaultPassword, 10);
+
 
                 if (!user) {
                     user = await userRepo.createMember({
@@ -204,24 +203,41 @@ const createAdminService = () => {
                         invitedBy: adminUserId
                     }, session);
 
-                    console.log('userserw',user);
-                    
+                    console.log('userserw', user);
+
                     const inviteToken = crypto.randomBytes(32).toString("hex");
-                    console.log('int T:',inviteToken);
-                    
+                    console.log('int T:', inviteToken);
+
                     await inviteRepo.createInvite({
                         email,
                         orgId,
                         token: inviteToken
                     }, session);
-                
+
                     const inviteLink = `${process.env.FRONTEND_URL}/set-password/${inviteToken}`;
-                    console.log('int link',inviteLink);
-                    
+                    console.log('int link', inviteLink);
+
                     await sendInviteEmail(email, inviteLink);
-                
+
                 } else {
                     await userRepo.addGroupToUser(user, newGroup._id, session);
+                    
+                    if (!user.passwordHash || user.status === "pending") {
+
+                        console.log("User exists but not activated → resend invite");
+                
+                        const inviteToken = crypto.randomBytes(32).toString("hex");
+                
+                        await inviteRepo.createInvite({
+                            email,
+                            orgId,
+                            token: inviteToken
+                        }, session);
+                
+                        const inviteLink = `${process.env.FRONTEND_URL}/set-password/${inviteToken}`;
+                
+                        await sendInviteEmail(email, inviteLink);
+                    }
                 }
 
                 newGroup.members.push(user._id);
@@ -265,7 +281,7 @@ const createAdminService = () => {
             const groups = await groupRepo.findGroupsByOrgId(orgId);
 
             const populatedGroups = await groupRepo.findGroupsByOrgIdandPopulate(orgId);
-        
+
             return { success: true, groups: populatedGroups };
 
         } catch (error) {
@@ -279,24 +295,61 @@ const createAdminService = () => {
             const group = await groupRepo.findGroupById(groupId, session);
             if (!group) return { success: false, status: 404, message: "Group not found" };
 
-            const orgId = group.orgId; 
+            const orgId = group.orgId;
 
-            let user = await userRepo.findUserByEmail(email, session);
+            let user = await userRepo.findUserByEmailAndOrg(email, orgId, session);
 
             if (!user) {
-                const hashedPassword = await bcrypt.hash("defaultPassword123", 10);
-                user = await userRepo.createUser({
+                user = await userRepo.createMember({
                     email,
                     name: userName,
-                    passwordHash: hashedPassword,
+                    passwordHash: null,
                     orgId,
                     role,
+                    groupIds:[group._id],
+                    status: "pending",
+                    invitedBy:group.createdBy
                 }, session);
+
+
+                const inviteToken = crypto.randomBytes(32).toString("hex");
+                    console.log('int T:', inviteToken);
+
+                    await inviteRepo.createInvite({
+                        email,
+                        orgId,
+                        token: inviteToken
+                    }, session);
+
+                    const inviteLink = `${process.env.FRONTEND_URL}/set-password/${inviteToken}`;
+                    console.log('int link', inviteLink);
+
+                    await sendInviteEmail(email, inviteLink);
+            }else{
+                await userRepo.addGroupToUser(user, group._id, session);
+                if (!user.passwordHash || user.status === "pending") {
+
+                    console.log("User exists but not activated → resend invite");
+            
+                    const inviteToken = crypto.randomBytes(32).toString("hex");
+            
+                    await inviteRepo.createInvite({
+                        email,
+                        orgId,
+                        token: inviteToken
+                    }, session);
+            
+                    const inviteLink = `${process.env.FRONTEND_URL}/set-password/${inviteToken}`;
+            
+                    await sendInviteEmail(email, inviteLink);
+                }
             }
 
-           
-            await groupRepo.addMemberToGroup(group, user._id, session);
-            await userRepo.addGroupToUser(user, group._id, session);
+
+            if (!group.members.includes(user._id)) {
+                await groupRepo.addMemberToGroup(group, user._id, session);
+            }
+    
 
             return { success: true, message: "User added to group successfully", group };
         } catch (error) {
@@ -351,39 +404,39 @@ const createAdminService = () => {
     };
 
 
-const DelOrLea = async (groupId, userId) => {
-    try {
+    const DelOrLea = async (groupId, userId) => {
+        try {
 
 
-        const group = await groupRepo.findGroupById(groupId);
+            const group = await groupRepo.findGroupById(groupId);
 
-        if (!group) {
-            return {success: false,status: 404,message: "Group not found"};
+            if (!group) {
+                return { success: false, status: 404, message: "Group not found" };
+            }
+
+            const isAdmin = group.createdBy.toString() === userId.toString();
+
+            if (isAdmin) {
+
+                await userRepo.removeGroupFromUsers(groupId);
+                await groupRepo.deleteGroupById(groupId);
+
+                return {
+                    success: true,
+                    message: "Community deleted successfully"
+                };
+            }
+
+            await groupRepo.removeMemberFromGroup(group, userId);
+            await userRepo.removeGroupFromSingleUser(userId, groupId);
+
+            return { success: true, message: "You left the community" };
+
+        } catch (error) {
+
+            return { success: false, status: 500, message: "Server error", error: error.message };
         }
-
-        const isAdmin = group.createdBy.toString() === userId.toString();
-
-        if (isAdmin) {
-
-            await userRepo.removeGroupFromUsers(groupId);
-            await groupRepo.deleteGroupById(groupId);
-
-            return {
-                success: true,
-                message: "Community deleted successfully"
-            };
-        }
-
-        await groupRepo.removeMemberFromGroup(group, userId);
-        await userRepo.removeGroupFromSingleUser(userId, groupId);
-
-        return {success: true,message: "You left the community"};
-
-    } catch (error) {
-
-        return {success: false,status: 500,message: "Server error",error: error.message};
-    }
-};
+    };
 
 
     return { groupCreation, listGroups, createMember, fetchMembers, removeMemberFromGrp, DelOrLea };

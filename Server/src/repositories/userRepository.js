@@ -27,10 +27,10 @@ const findUserByEmailAndOrg = async (email, orgId, session = null) => {
 };
 
 
-const createUser = async (userData, session = null) => {
-    const [user] = await User.create([userData], { session });
-    return user;
-};
+// const createUser = async (userData, session = null) => {
+//     const [user] = await User.create([userData], { session });
+//     return user;
+// };
 
 
 const createMember = async (userData, session = null) => {

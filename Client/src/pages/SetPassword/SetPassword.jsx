@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { fetchInfo } from "../../service/user/UserApi";
+import { fetchInfo, submitPassword } from "../../service/user/UserApi";
+import { toast } from "react-toastify";
 
 const SetPassword = () => {
   const { token } = useParams();
@@ -57,9 +58,10 @@ const SetPassword = () => {
       // });
       const response = await submitPassword(token,password)
 
-      if (res.data.success) {
-        alert("Password set successfully!");
+      if (response.success) {
+        toast.success(response.message)
         navigate("/login");
+        
       }
     } catch (error) {
       setError(error.response?.data?.message || "Something went wrong");
