@@ -95,7 +95,7 @@ module.exports = {
     findMemberByEmail,
     findUserById,
     findUserByEmailAndOrg,
-    createUser,
+    // createUser,
     createMember,
     addGroupToUser,
     findUserByEmail,
